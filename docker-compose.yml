@@ -1,0 +1,14 @@
+version: '3'
+services:
+  libretranslate:
+    image: libretranslate/libretranslate:latest
+    ports:
+      - "5005:5000"
+    environment:
+      - LT_LOAD_ONLY=en,hi,te,ta,bn,gu,kn,ml,mr,pa,ur
+      - LT_UPDATE_MODELS=true
+    restart: unless-stopped
+    volumes:
+      - lt_data:/home/libretranslate/.local
+volumes:
+  lt_data:

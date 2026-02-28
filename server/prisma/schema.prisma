@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  // Neon uses connection pooling — directUrl same as url for free tier
+  directUrl = env("DATABASE_URL")
+}
+
+model User {
+  id                String   @id @default(cuid())
+  username          String   @unique @db.VarChar(20)
+  email             String   @unique @db.VarChar(255)
+  password          String
+  preferredLanguage String   @default("en") @db.VarChar(10)
+  avatar            String   @default("")
+  isOnline          Boolean  @default(false)
+  lastSeen          DateTime @default(now())
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relations
+  sentMessages             Message[]                 @relation("SentMessages")
+  conversationParticipants ConversationParticipant[]
+
+  @@index([username])
+  @@index([email])
+}
+
+model Conversation {
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  lastMessageId String?  @unique
+
+  // Relations
+  participants  ConversationParticipant[]
+  messages      Message[]
+  lastMessage   Message?                  @relation("LastMessage", fields: [lastMessageId], references: [id])
+}
+
+// Junction table: one row per user per conversation
+// Stores per-user unread count — cleaner than a Map field
+model ConversationParticipant {
+  id             String   @id @default(cuid())
+  conversationId String
+  userId         String
+  unreadCount    Int      @default(0)
+  joinedAt       DateTime @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([conversationId, userId])
+  @@index([userId])
+  @@index([conversationId])
+}
+
+model Message {
+  id               String        @id @default(cuid())
+  conversationId   String
+  senderId         String
+  originalText     String        @db.Text
+  detectedLanguage String        @default("en") @db.VarChar(10)
+  // JSONB column: [{ language: "te", text: "translated text" }, ...]
+  translations     Json          @default("[]")
+  status           MessageStatus @default(SENT)
+  type             MessageType   @default(TEXT)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  // Relations
+  conversation      Conversation  @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender            User          @relation("SentMessages", fields: [senderId], references: [id])
+  lastMessageForConv Conversation? @relation("LastMessage")
+
+  @@index([conversationId, createdAt(sort: Desc)])
+  @@index([senderId])
+}
+
+enum MessageStatus {
+  SENT
+  DELIVERED
+  READ
+}
+
+enum MessageType {
+  TEXT
+  IMAGE
+  SYSTEM
+}
