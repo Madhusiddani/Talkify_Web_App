@@ -1,0 +1,114 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal {
+    width: 100%;
+    max-width: 440px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--surface-border);
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-md);
+    max-height: 80vh;
+}
+
+.header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--surface-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.closeBtn {
+    color: var(--text-muted);
+    font-size: 18px;
+}
+
+.closeBtn:hover {
+    color: var(--text-primary);
+}
+
+.searchBox {
+    padding: 16px 20px;
+}
+
+.searchBox input {
+    width: 100%;
+    padding: 12px 16px;
+    background: var(--bg-primary);
+    border: 1px solid var(--surface-border);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-size: 14px;
+}
+
+.searchBox input:focus {
+    border-color: var(--accent);
+}
+
+.results {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 8px 16px;
+}
+
+.info {
+    padding: 24px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
+.userItem {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.userItem:hover {
+    background: var(--bg-hover);
+}
+
+.username {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.startBtn {
+    padding: 6px 14px;
+    background: var(--accent-muted);
+    color: var(--accent);
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.userItem:hover .startBtn {
+    background: var(--accent);
+    color: #fff;
+}

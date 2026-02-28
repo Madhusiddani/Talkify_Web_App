@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String   @id @default(cuid())
+  username          String   @unique
+  email             String   @unique
+  password          String
+  preferredLanguage String   @default("en")
+  avatar            String   @default("")
+  isOnline          Boolean  @default(false)
+  lastSeen          DateTime @default(now())
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  sentMessages             Message[]                 @relation("SentMessages")
+  conversationParticipants ConversationParticipant[]
+}
+
+model Conversation {
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  lastMessageId String?  @unique
+
+  participants ConversationParticipant[]
+  messages     Message[]
+  lastMessage  Message?                  @relation("LastMessage", fields: [lastMessageId], references: [id])
+}
+
+model ConversationParticipant {
+  id             String   @id @default(cuid())
+  conversationId String
+  userId         String
+  unreadCount    Int      @default(0)
+  joinedAt       DateTime @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([conversationId, userId])
+}
+
+model Message {
+  id               String        @id @default(cuid())
+  conversationId   String
+  senderId         String
+  originalText     String
+  detectedLanguage String        @default("en")
+  translations     Json          @default("[]")
+  status           MessageStatus @default(SENT)
+  type             MessageType   @default(TEXT)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  conversation       Conversation  @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender             User          @relation("SentMessages", fields: [senderId], references: [id])
+  lastMessageForConv Conversation? @relation("LastMessage")
+}
+
+enum MessageStatus {
+  SENT
+  DELIVERED
+  READ
+}
+
+enum MessageType {
+  TEXT
+  IMAGE
+  SYSTEM
+}

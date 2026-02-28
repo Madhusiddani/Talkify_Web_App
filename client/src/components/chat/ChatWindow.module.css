@@ -1,0 +1,53 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.header {
+    padding: 12px 24px;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--surface-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.targetInfo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.nameSection {
+    display: flex;
+    flex-direction: column;
+}
+
+.name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.subtext {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.messageList {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.loading {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+}

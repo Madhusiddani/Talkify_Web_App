@@ -1,0 +1,65 @@
+.avatarContainer {
+    position: relative;
+    border-radius: var(--radius-pill);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: visible;
+}
+
+.sm {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+}
+
+.md {
+    width: 40px;
+    height: 40px;
+    font-size: 14px;
+}
+
+.lg {
+    width: 56px;
+    height: 56px;
+    font-size: 18px;
+}
+
+.avatarImg {
+    width: 100%;
+    height: 100%;
+    border-radius: var(--radius-pill);
+    object-fit: cover;
+}
+
+.avatarPlaceholder {
+    width: 100%;
+    height: 100%;
+    border-radius: var(--radius-pill);
+    background: var(--surface-2);
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    border: 1px solid var(--surface-border);
+}
+
+.statusDot {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid var(--bg-primary);
+}
+
+.online {
+    background-color: var(--online);
+}
+
+.offline {
+    background-color: var(--offline);
+}

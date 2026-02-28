@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  /* Base backgrounds */
+  --bg-primary: #0d0f14;
+  --bg-secondary: #13161e;
+  --bg-tertiary: #1a1d27;
+  --bg-hover: #1f2335;
+
+  /* Surfaces */
+  --surface-1: #1e2130;
+  --surface-2: #252840;
+  --surface-border: #2a2d3e;
+
+  /* Accent — Electric Indigo */
+  --accent: #6c63ff;
+  --accent-hover: #7c74ff;
+  --accent-muted: rgba(108, 99, 255, 0.15);
+  --accent-glow: rgba(108, 99, 255, 0.3);
+
+  /* Semantic colors */
+  --online: #22d3a5;
+  --offline: #4a4f6a;
+  --danger: #ff5c7c;
+
+  /* Text hierarchy */
+  --text-primary: #e8eaf6;
+  --text-secondary: #8b90b8;
+  --text-muted: #4f5474;
+
+  /* Message bubbles */
+  --bubble-sent: #6c63ff;
+  --bubble-received: #1e2130;
+  --bubble-sent-text: #ffffff;
+  --bubble-received-text: #e8eaf6;
+
+  /* Translation badge */
+  --translate-bg: rgba(34, 211, 165, 0.12);
+  --translate-text: #22d3a5;
+
+  /* Typography */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Border radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-pill: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.4);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.5);
+  --shadow-glow: 0 0 20px rgba(108, 99, 255, 0.2);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  transition: all 0.2s ease;
+}
+
+input {
+  font-family: inherit;
+  outline: none;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--surface-border);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}

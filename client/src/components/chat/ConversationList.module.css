@@ -1,0 +1,12 @@
+.container {
+    overflow-y: auto;
+    flex: 1;
+}
+
+.loading,
+.empty {
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 14px;
+}
