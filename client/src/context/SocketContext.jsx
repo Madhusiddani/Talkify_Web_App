@@ -14,15 +14,19 @@ export const SocketProvider = ({ children }) => {
     useEffect(() => {
         if (user) {
             const token = localStorage.getItem('token');
-            const newSocket = io(import.meta.env.VITE_API_URL || 'http://localhost:5000', {
+            const newSocket = io({   // No URL = connects to same origin, goes through Vite proxy
                 auth: { token },
-                transports: ['websocket'],
+                transports: ['websocket', 'polling'], // include polling as fallback
             });
 
             setSocket(newSocket);
 
             newSocket.on('connect', () => {
                 console.log('Connected to socket server');
+            });
+
+            newSocket.on('connect_error', (err) => {
+                console.error('Socket connection error:', err.message);
             });
 
             newSocket.on('user:status', ({ userId, isOnline }) => {

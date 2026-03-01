@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "./client"
 }
 
 datasource db {
@@ -9,70 +8,66 @@ datasource db {
 }
 
 model User {
-  id                String   @id @default(cuid())
-  username          String   @unique
-  email             String   @unique
-  password          String
-  preferredLanguage String   @default("en")
-  avatar            String   @default("")
-  isOnline          Boolean  @default(false)
-  lastSeen          DateTime @default(now())
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id             String    @id @default(cuid())
+  username       String    @unique
+  email          String    @unique
+  password       String
+  avatar         String?
+  preferredLang  String    @default("en")
+  isOnline       Boolean   @default(false)
+  lastSeen       DateTime  @default(now())
+  createdAt      DateTime  @default(now())
 
-  sentMessages             Message[]                 @relation("SentMessages")
-  conversationParticipants ConversationParticipant[]
+  sentMessages     Message[] @relation("SentMessages")
+  receivedMessages Message[] @relation("ReceivedMessages")
+  rooms            RoomMember[]
 }
 
-model Conversation {
-  id            String   @id @default(cuid())
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  lastMessageId String?  @unique
+model Room {
+  id        String    @id @default(cuid())
+  name      String?
+  isGroup   Boolean   @default(false)
+  createdAt DateTime  @default(now())
 
-  participants  ConversationParticipant[]
-  messages      Message[]
-  lastMessage   Message?                  @relation("LastMessage", fields: [lastMessageId], references: [id])
+  members  RoomMember[]
+  messages Message[]
 }
 
-model ConversationParticipant {
-  id             String   @id @default(cuid())
-  conversationId String
-  userId         String
-  unreadCount    Int      @default(0)
-  joinedAt       DateTime @default(now())
+model RoomMember {
+  id       String @id @default(cuid())
+  userId   String
+  roomId   String
+  joinedAt DateTime @default(now())
 
-  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id])
+  room Room @relation(fields: [roomId], references: [id])
 
-  @@unique([conversationId, userId])
+  @@unique([userId, roomId])
 }
 
 model Message {
-  id               String        @id @default(cuid())
-  conversationId   String
+  id               String   @id @default(cuid())
+  content          String
+  originalLang     String   @default("en")
   senderId         String
-  originalText     String
-  detectedLanguage String        @default("en")
-  translations     Json          @default("[]")
-  status           MessageStatus @default(SENT)
-  type             MessageType   @default(TEXT)
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @updatedAt
+  receiverId       String?
+  roomId           String?
+  createdAt        DateTime @default(now())
 
-  conversation      Conversation  @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  sender            User          @relation("SentMessages", fields: [senderId], references: [id])
-  lastMessageForConv Conversation? @relation("LastMessage")
+  sender   User  @relation("SentMessages",   fields: [senderId],   references: [id])
+  receiver User? @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  room     Room? @relation(fields: [roomId], references: [id])
+
+  translations Translation[]
 }
 
-enum MessageStatus {
-  SENT
-  DELIVERED
-  READ
-}
+model Translation {
+  id         String  @id @default(cuid())
+  messageId  String
+  lang       String
+  translated String
 
-enum MessageType {
-  TEXT
-  IMAGE
-  SYSTEM
+  message Message @relation(fields: [messageId], references: [id])
+
+  @@unique([messageId, lang])
 }

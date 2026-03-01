@@ -4,7 +4,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { SocketProvider } from './context/SocketContext';
 import AuthPage from './pages/AuthPage';
 import ChatPage from './pages/ChatPage';
-import './styles/globals.css';
+// globals.css is already imported in main.jsx — removed duplicate import here
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();

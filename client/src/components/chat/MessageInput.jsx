@@ -12,15 +12,12 @@ const MessageInput = ({ conversationId, recipientId }) => {
         if (!text.trim() || !socket) return;
 
         socket.emit('message:send', {
-            conversationId,
-            text: text.trim(),
-        }, (response) => {
-            if (response.success) {
-                setText('');
-                // Stop typing indicator immediately
-                socket.emit('typing:stop', { conversationId, recipientId });
-            }
+            receiverId: recipientId,   // server expects receiverId, not conversationId
+            content: text.trim(),      // server expects 'content', not 'text'
         });
+
+        setText('');
+        socket.emit('typing:stop', { receiverId: recipientId });
     };
 
     const handleTyping = (e) => {
@@ -28,15 +25,12 @@ const MessageInput = ({ conversationId, recipientId }) => {
 
         if (!socket || !recipientId) return;
 
-        // Emit typing:start
-        socket.emit('typing:start', { conversationId, recipientId });
+        socket.emit('typing:start', { receiverId: recipientId });
 
-        // Clear existing timer
         if (typingTimer.current) clearTimeout(typingTimer.current);
 
-        // Set timer to emit typing:stop
         typingTimer.current = setTimeout(() => {
-            socket.emit('typing:stop', { conversationId, recipientId });
+            socket.emit('typing:stop', { receiverId: recipientId });
         }, 2000);
     };
 

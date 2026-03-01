@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
 
             try {
                 const { data } = await api.get('/auth/me');
-                setUser(data.user);
+                setUser(data);  // /auth/me returns user directly, not wrapped in { user }
             } catch (err) {
                 localStorage.removeItem('token');
                 setError(err.response?.data?.message || 'Authentication failed');
@@ -52,7 +52,7 @@ export const AuthProvider = ({ children }) => {
                 username,
                 email,
                 password,
-                preferredLanguage,
+                preferredLang: preferredLanguage,  // Prisma schema field is preferredLang
             });
             setUser(data.user);
             localStorage.setItem('token', data.token);

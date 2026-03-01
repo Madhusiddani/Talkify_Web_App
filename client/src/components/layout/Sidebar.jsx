@@ -52,7 +52,7 @@ const Sidebar = ({ onSelectConversation, activeConversationId }) => {
             <footer className={styles.footer}>
                 <select
                     className={styles.langSelect}
-                    value={user?.preferredLanguage}
+                    value={user?.preferredLang}   // Prisma schema field is preferredLang, not preferredLanguage
                     onChange={(e) => updateLanguage(e.target.value)}
                 >
                     {LANGUAGES.map(l => (

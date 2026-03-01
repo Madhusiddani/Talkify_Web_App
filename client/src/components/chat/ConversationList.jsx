@@ -12,7 +12,7 @@ const ConversationList = ({ onSelect, activeId }) => {
     const fetchConversations = async () => {
         try {
             const { data } = await api.get('/messages/conversations');
-            setConversations(data.conversations);
+            setConversations(data);  // server returns array directly, not { conversations: [...] }
         } catch (err) {
             console.error('Failed to fetch conversations:', err);
         } finally {

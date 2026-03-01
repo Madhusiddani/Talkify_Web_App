@@ -1,12 +1,10 @@
 import React from 'react';
 import { formatDistanceToNow } from 'date-fns';
-import { useAuth } from '../../context/AuthContext';
 import Avatar from '../common/Avatar';
 import styles from './ConversationItem.module.css';
 
 const ConversationItem = ({ conversation, isActive, onClick }) => {
-    const { user } = useAuth();
-    const otherParticipant = conversation.participants.find(p => p.id !== user.id);
+    const otherParticipant = conversation.partner;  // server returns 'partner' directly
     const lastMessage = conversation.lastMessage;
 
     return (
@@ -28,7 +26,7 @@ const ConversationItem = ({ conversation, isActive, onClick }) => {
 
                 <div className={styles.bottomLine}>
                     <p className={styles.preview}>
-                        {lastMessage ? lastMessage.displayText : 'Start a conversation'}
+                        {lastMessage ? (lastMessage.displayContent || lastMessage.content) : 'Start a conversation'}
                     </p>
                     {conversation.unreadCount > 0 && (
                         <span className={styles.badge}>{conversation.unreadCount}</span>

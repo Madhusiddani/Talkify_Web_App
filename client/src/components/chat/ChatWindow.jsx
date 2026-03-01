@@ -22,14 +22,20 @@ const ChatWindow = ({ conversationId }) => {
 
     const fetchMessages = async () => {
         try {
-            const { data } = await api.get(`/messages/conversations/${conversationId}/messages`);
-            setMessages(data.messages);
+            const { data } = await api.get(`/messages/${conversationId}`);
+            // data is a flat array of messages
+            setMessages(data);
 
-            // Temporary: Find the other user from existing messages or participants
-            // In a real app, the conversation endpoint should return the partner details directly
-            const partner = data.messages.find(m => m.sender.id !== user.id)?.sender;
-            if (partner) setTargetUser(partner);
-
+            // Find the other user from the messages
+            const partner = data.find(m => m.sender.id !== user.id)?.sender;
+            if (partner) {
+                setTargetUser(partner);
+            } else {
+                // No messages yet — fetch the user info from the users list
+                const usersRes = await api.get('/users');
+                const found = usersRes.data.find(u => u.id === conversationId);
+                if (found) setTargetUser(found);
+            }
         } catch (err) {
             console.error('Failed to fetch messages:', err);
         } finally {
@@ -46,18 +52,13 @@ const ChatWindow = ({ conversationId }) => {
         if (!socket) return;
 
         socket.on('message:new', (message) => {
-            if (message.conversationId === conversationId) {
+            if (
+                message.conversationId === conversationId ||
+                message.senderId === conversationId ||
+                message.sender?.id === conversationId
+            ) {
                 setMessages((prev) => [...prev, message]);
                 setTimeout(scrollToBottom, 100);
-
-                // Send read receipt if this window is open
-                if (message.sender.id !== user.id) {
-                    socket.emit('message:read', {
-                        conversationId,
-                        messageId: message.id,
-                        senderId: message.sender.id
-                    });
-                }
             }
         });
 

@@ -18,7 +18,7 @@ const UserSearchModal = ({ onClose, onSelectConversation }) => {
             setLoading(true);
             try {
                 const { data } = await api.get(`/users/search?q=${query}`);
-                setResults(data.users);
+                setResults(data);  // server returns array directly, not { users: [...] }
             } catch (err) {
                 console.error('Search failed:', err);
             } finally {
@@ -33,7 +33,7 @@ const UserSearchModal = ({ onClose, onSelectConversation }) => {
     const handleStartChat = async (userId) => {
         try {
             const { data } = await api.post('/messages/conversations/start', { recipientId: userId });
-            onSelectConversation(data.conversation.id);
+            onSelectConversation(data.conversationId);  // server returns { conversationId, partner }
             onClose();
         } catch (err) {
             console.error('Failed to start chat:', err);

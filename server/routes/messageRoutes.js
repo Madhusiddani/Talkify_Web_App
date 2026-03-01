@@ -1,14 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const {
-  getConversations,
-  getMessages,
-  startConversation,
-} = require('../controllers/messageController');
+const { getMessages, sendMessage, getConversations, startConversation } = require('../controllers/messageController');
 const { protect } = require('../middleware/authMiddleware');
 
-router.get('/conversations', protect, getConversations);
+router.get('/conversations', protect, getConversations);        // Must be BEFORE /:userId
 router.post('/conversations/start', protect, startConversation);
-router.get('/conversations/:conversationId/messages', protect, getMessages);
+router.get('/:userId', protect, getMessages);
+router.post('/', protect, sendMessage);
 
 module.exports = router;
